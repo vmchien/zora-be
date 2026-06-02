@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package vn.vato.zora.be.api.payment.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "vn.vato.zora.be.api/api/payment/v1;v1";
+option java_multiple_files = true;
+option java_outer_classname = "HelloworldProtoV1";
+
+// The greeting service definition.
+service BookingService {
+  rpc BookingTicket(HelloRequest)returns (HelloReply);
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}

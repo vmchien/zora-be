@@ -1,0 +1,81 @@
+# Reference https://github.com/github/gitignore/blob/master/Go.gitignore123
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Go workspace file
+go.work
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# OS General
+Thumbs.db
+.DS_Store
+
+# project
+*.cert
+*.key
+*.log
+bin/
+
+# Develop tools
+.vscode/
+.idea/
+*.swp
+
+
+# Ent generated files
+data/ent/**
+!data/ent/README.md
+
+# Proto generated files
+**/*.pb.go
+**/*_grpc.pb.go
+**/*_http.pb.go
+**/*.pb.validate.go
+
+# OpenAPI generated files
+**/openapi.yaml
+**/swagger.json
+
+# Go generated files
+**/*_gen.go
+**/*_generated.go
+**/*_gen.proto
+
+# Wire generated files
+**/wire_gen.go
+
+# Environment files
+.env
+**/*.yaml
+
+# Build artifacts
+**/dist/
+**/build/
+**/target/
+
+# Ignore specific directories: mounted volumes
+.volumes
+/tools/Makefile
+
+.gocache
+/.claude/
+/.codegraph/
+/.cursor/
+/.mcp.json
+/AGENTS.md

@@ -1,0 +1,23 @@
+# .dockerignore
+bin/
+dist/
+out/
+build/
+*.log
+*.tmp
+*.cache
+.coverage
+.idea/
+.vscode/
+node_modules/
+**/.git
+**/.DS_Store
+.git
+.gitlab
+node_modules
+**/bin
+**/dist
+**/tmp
+**/.idea
+**/.vscode
+**/*.log
