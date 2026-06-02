@@ -29,13 +29,48 @@ message Data {
   message Database {
     string driver = 1;
     string source = 2;
+    uint32 max_open_conn = 3;
+    uint32 max_idle_conn = 4;
+    uint32 max_lifetime = 5;
+    bool debugging = 6;
+    bool auto_migrate = 7;
+    optional string schema = 8;
+    optional string mode = 9; // "dev" | "stag" | "prod"
   }
   message Redis {
-    string network = 1;
-    string addr = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
+    string address = 1;
+    optional string username = 2;
+    optional string password = 3;
+    optional string db = 4;
+    int32 time_cache_status = 5; // seconds unit
+    int32 time_cache_payment_info = 6; // seconds unit
+  }
+  message ElasticSearch {
+    string addr = 1;
+    string username = 2;
+    string password = 3;
+  }
+  message Kafka {
+    repeated string brokers = 1;
+    repeated Producer producers = 2;
+    repeated Consumer consumers = 3;
+    message Producer {
+      string name = 1;
+      string topic = 2;
+      bool active = 3;
+    }
+    message Consumer {
+      string name = 1;
+      string group = 2;
+      string topic = 3;
+      bool active = 4;
+      repeated string brokers = 5;
+      google.protobuf.Duration delay = 6;
+    }
   }
   Database database = 1;
   Redis redis = 2;
+//  ElasticSearch elasticsearch = 3;
+//  Kafka kafka = 4;
+//  optional int32 ticket_migrate_batch_size = 5;
 }

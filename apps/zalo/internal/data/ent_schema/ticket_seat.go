@@ -7,9 +7,9 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
-	// "vn.vato.zora.be.api.api/pkg/def"
-	// "vn.vato.zora.be.api/pkg/data/ent_mixin"
-	// "vn.vato.zora.be.api/pkg/data/enums"
+	"vn.vato.zora.be.api/pkg/data/ent_mixin"
+	"vn.vato.zora.be.api/pkg/data/enums"
+	"vn.vato.zora.be.api/pkg/def"
 )
 
 type TicketSeat struct {
@@ -175,7 +175,5 @@ func (TicketSeat) Edges() []ent.Edge {
 			Field("ticket_id").
 			Required().
 			Unique(),
-
-		edge.To("passenger", TicketPassenger.Type),
 	}
 }

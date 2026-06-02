@@ -1,0 +1,82 @@
+package constant
+
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+var GLOBAL_TENANT = uuid.MustParse("00000000-0000-7000-0000-000000000001")
+var DEVELOPMENT_TENANT = uuid.MustParse("00000000-0000-7000-0000-000000000002")
+var STAGING_TENANT = uuid.MustParse("00000000-0000-7000-0000-000000000003")
+var UAT_TENANT = uuid.MustParse("00000000-0000-7000-0000-000000000004")
+
+var SYSTEM_TENANTS = []uuid.UUID{GLOBAL_TENANT, DEVELOPMENT_TENANT, STAGING_TENANT, UAT_TENANT}
+
+const (
+	APP_NAME    = "NOVA ERP"
+	SYSTEM_ROLE = "System Administrator"
+)
+
+const (
+	DEFAULT_NOREPLY_EMAIL = "support@novaerp.vn"
+	DEFAULT_SUPPORT_EMAIL = "support@novaerp.vn"
+)
+
+const (
+	DEFAULT_LANGUAGE = "vi-VN"
+	DEFAULT_LOCALE   = "vi"
+)
+
+const (
+	DEFAULT_CURRENCY = "VND"
+)
+
+const (
+	DEFAULT_TIMEZONE = "Asia/Ho_Chi_Minh"
+)
+
+const (
+	DEFAULT_USER_PASSWORD  = "Abc123!@#"
+	DEFAULT_OWNER_PASSWORD = "Abc123!@#"
+)
+
+const (
+	DEFAULT_TIME_FORMAT                    = time.RFC3339
+	DEFAULT_DATE_FORMAT                    = time.DateOnly
+	DEFAULT_DEPART_TIME_FORMAT             = "15:04"
+	DEFAULT_DEPART_DATE_FORAMT             = "02-01-2006"
+	DEFAULT_BUSLINES_DEPARTURE_TIME_FORAMT = "2006-01-02 15:04:05"
+)
+
+const (
+	DEFAULT_SCHEDULER_TICKER       = 5 * time.Second
+	DEFAULT_STORAGE_TTL_SEC        = 15 * 60
+	DEFAULT_JWT_DURATION           = 10 * time.Minute
+	DEFAULT_REFRESH_TOKEN_DURATION = 7 * 24 * time.Hour
+)
+
+const (
+	DEFAULT_PASSWORD_RESET_QUOTA = 5
+	DEFAULT_PASSWORD_RESET_TTL   = 24 * time.Hour
+)
+
+const (
+	DEFAULT_SPLIT_TOKEN_CHARACTER = "."
+)
+
+const (
+	DEFAULT_TENANT_INVITATION_TTL = 7 * 24 * time.Hour
+)
+
+const (
+	MIN_PASSWORD_LENGTH = 8
+)
+
+const (
+	DEFAULT_PHONE_NUMBER_COUNTRY_CODE = "VN"
+)
+
+const (
+	DEPARTURE_TIME_CONDITION = "2026-04-01T00:00:00+07:00"
+)
