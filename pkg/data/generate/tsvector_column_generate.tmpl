@@ -1,0 +1,30 @@
+{{- define "tsvector_column_generate" }}
+{{- range $node := .Graph.Nodes }}
+{{- $tsFields := list }}
+
+{{- range $f := $node.Fields }}
+    {{- if hasAnnotation $f.Annotations "TSVectorAnnotation" }}
+        {{- $tsFields = append $tsFields $f.Name }}
+    {{- end }}
+{{- end }}
+
+{{- if gt (len $tsFields) 0 }}
+{{ $filename := printf "tsvector_column_generate_gen.sql"}}
+{{- template "tsvector_column_sql" dict "Filename" $filename "Node" $node "Fields" $tsFields }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "tsvector_column_sql" }}
+ALTER TABLE {{ .Node.Table }}
+ADD COLUMN IF NOT EXISTS ts_vector tsvector
+GENERATED ALWAYS AS (
+  to_tsvector('simple', public.immutable_unaccent(
+    {{- range $i, $f := .Fields -}}
+      {{- if $i }} || ' ' || {{ end }}COALESCE({{ $f }}, ''::text)
+    {{- end }}
+  ))
+) STORED;
+CREATE INDEX IF NOT EXISTS {{ .Node.Table }}_ts_vector_idx ON {{ .Node.Table }} USING GIN (ts_vector);
+
+{{- end }}

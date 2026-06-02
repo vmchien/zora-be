@@ -2,7 +2,11 @@ module vn.vato.zora.be.api/apps/zalo
 
 go 1.26
 
-replace vn.vato.zora.be.api/api/zalo => ../../api/zalo
+replace (
+	vn.vato.zora.be.api/api/zalo => ../../api/zalo
+	// ### public folder ###
+	vn.vato.zora.be.api/pkg => ../../pkg
+)
 
 require (
 	github.com/go-kratos/kratos/v2 v2.9.2
@@ -14,6 +18,7 @@ require (
 require (
 	cel.dev/expr v0.25.2 // indirect
 	dario.cat/mergo v1.0.2 // indirect
+	entgo.io/ent v0.14.6
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fsnotify/fsnotify v1.10.1 // indirect
@@ -21,7 +26,7 @@ require (
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-playground/form/v4 v4.3.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
+	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect

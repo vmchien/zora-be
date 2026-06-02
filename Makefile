@@ -26,10 +26,11 @@ clean:
 # update all module dependencies
 update:
 	@echo "Updating dependencies in all modules..."
-	@for mod in api/gateway \
-				api/payment \
+	@for mod in pkg \
+				api/gateway \
+				api/zalo \
 				apps/gateway \
-				apps/payment \
+				apps/zalo \
         	; do \
     	echo "Running go get -u in $$mod"; \
     	(cd $$mod && go mod tidy && go get -u ./...); \
@@ -41,7 +42,7 @@ update:
 build:
 	@echo "Building all modules..."
 	@for mod in apps/gateway \
-				apps/payment \
+				apps/zalo \
         	; do \
     	echo "Build module: $$mod"; \
     	(cd $$mod && make all); \
