@@ -6,11 +6,11 @@
 package main
 
 import (
-	"vn.vato.zora.be.api/apps/payment/internal/biz"
-	"vn.vato.zora.be.api/apps/payment/internal/conf"
-	"vn.vato.zora.be.api/apps/payment/internal/data"
-	"vn.vato.zora.be.api/apps/payment/internal/server"
-	"vn.vato.zora.be.api/apps/payment/internal/service"
+	"vn.vato.zora.be.api/apps/zalo/internal/biz"
+	"vn.vato.zora.be.api/apps/zalo/internal/conf"
+	"vn.vato.zora.be.api/apps/zalo/internal/data"
+	"vn.vato.zora.be.api/apps/zalo/internal/server"
+	"vn.vato.zora.be.api/apps/zalo/internal/service"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"

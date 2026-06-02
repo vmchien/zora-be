@@ -1,7 +1,7 @@
 package server
 
 import (
-	"vn.vato.zora.be.api/apps/payment/internal/conf"
+	"vn.vato.zora.be.api/apps/zalo/internal/conf"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"

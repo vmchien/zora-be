@@ -1,10 +1,10 @@
 package server
 
 import (
-	"vn.vato.zora.be.api/apps/payment/internal/conf"
-	"vn.vato.zora.be.api/apps/payment/internal/service"
+	"vn.vato.zora.be.api/apps/zalo/internal/conf"
+	"vn.vato.zora.be.api/apps/zalo/internal/service"
 
-	v1 "vn.vato.zora.be.api/api/payment/v1"
+	v1 "vn.vato.zora.be.api/api/zalo/v1"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -12,7 +12,7 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, payment *service.PaymentService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, zns *service.ZnsService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
@@ -28,6 +28,6 @@ func NewGRPCServer(c *conf.Server, payment *service.PaymentService, logger log.L
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterBookingServiceServer(srv, payment)
+	v1.RegisterZnsServiceServer(srv, zns)
 	return srv
 }

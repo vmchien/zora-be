@@ -3,19 +3,19 @@ package data
 import (
 	"context"
 
-	paymentv1 "vn.vato.zora.be.api/api/payment/v1"
+	zaloV1 "vn.vato.zora.be.api/api/zalo/v1"
 	"vn.vato.zora.be.api/apps/gateway/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type PaymentClient struct {
-	client paymentv1.BookingServiceClient
+	client zaloV1.ZnsServiceClient
 	log    *log.Helper
 }
 
 // NewPaymentRepo new a PaymentRepo implementation.
-func NewPaymentRepo(client paymentv1.BookingServiceClient, logger log.Logger) biz.PaymentRepo {
+func NewPaymentRepo(client zaloV1.ZnsServiceClient, logger log.Logger) biz.PaymentRepo {
 	return &PaymentClient{
 		client: client,
 		log:    log.NewHelper(logger),
@@ -23,7 +23,7 @@ func NewPaymentRepo(client paymentv1.BookingServiceClient, logger log.Logger) bi
 }
 
 func (r *PaymentClient) BookingTicket(ctx context.Context, name string) (string, error) {
-	resp, err := r.client.BookingTicket(ctx, &paymentv1.HelloRequest{Name: name})
+	resp, err := r.client.Send(ctx, &zaloV1.ZnsRequest{Name: name})
 	if err != nil {
 		return "", err
 	}

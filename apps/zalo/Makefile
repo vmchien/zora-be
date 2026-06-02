@@ -1,7 +1,7 @@
 #GOHOSTOS:=$(shell go env GOHOSTOS)
 GOPATH:=$(shell go env GOPATH)
 VERSION="0.1.1"
-NAME="payment-api"
+NAME="zalo-api"
 PROJECT_DOCS_DIR=internal/server/project-docs
 DOCS_SOURCE_DIR=../../docs
 
@@ -113,12 +113,12 @@ swagger3: project-docs
 .PHONY: build
 # build
 build: project-docs
-	mkdir -p bin && cd cmd && GOEXPERIMENT=jsonv2,goroutineleakprofile go build -o ../bin/payment -ldflags "-X main.Version=$(VERSION) -X main.Name=$(NAME)"
+	mkdir -p bin && cd cmd && GOEXPERIMENT=jsonv2,goroutineleakprofile go build -o ../bin/zalo -ldflags "-X main.Version=$(VERSION) -X main.Name=$(NAME)"
 
 .PHONY: buildl
 # build linux
 buildl: project-docs
-	mkdir -p bin && cd cmd && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2,goroutineleakprofile go build -o ../bin/payment -trimpath -buildvcs=false -ldflags="-s -w -X main.Version=$(VERSION) -X main.Name=$(NAME)"
+	mkdir -p bin && cd cmd && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GOEXPERIMENT=jsonv2,goroutineleakprofile go build -o ../bin/zalo -trimpath -buildvcs=false -ldflags="-s -w -X main.Version=$(VERSION) -X main.Name=$(NAME)"
 
 .PHONY: run
 # run

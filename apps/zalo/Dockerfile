@@ -29,9 +29,9 @@ COPY third_party ./third_party
 COPY pkg ./pkg
 COPY templates/generate ./templates/generate
 
-COPY apps/payment/go.mod apps/payment/go.sum ./apps/payment/
+COPY apps/zalo/go.mod apps/zalo/go.sum ./apps/zalo/
 
-WORKDIR /src/apps/payment
+WORKDIR /src/apps/zalo
 RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
@@ -43,7 +43,7 @@ COPY --from=tools /go/bin/* /go/bin/
 ENV PATH="/go/bin:$PATH"
 
 # Build the binary
-WORKDIR /src/apps/payment
+WORKDIR /src/apps/zalo
 RUN --mount=type=cache,target=/root/.cache/go-build \
     --mount=type=cache,target=/go/pkg/mod \
     make docker
@@ -57,7 +57,7 @@ FROM alpine:latest
 
 RUN apk add --no-cache tzdata
 
-COPY --from=builder /src/apps/payment/bin/gateway /app/gateway
+COPY --from=builder /src/apps/zalo/bin/gateway /app/gateway
 
 WORKDIR /app
 EXPOSE 8000

@@ -1,16 +1,14 @@
 package data
 
 import (
-	"vn.vato.zora.be.api/apps/payment/internal/conf"
+	"vn.vato.zora.be.api/apps/zalo/internal/conf"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 )
 
-// ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewBookingRepo)
+var ProviderSet = wire.NewSet(NewData, NewZnsRepo)
 
-// Data .
 type Data struct {
 	// TODO wrapped database client
 }

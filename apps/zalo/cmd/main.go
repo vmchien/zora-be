@@ -11,7 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"vn.vato.zora.be.api/apps/payment/internal/conf"
+	"vn.vato.zora.be.api/apps/zalo/internal/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
@@ -27,7 +27,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&flagconf, "conf", "configs/payment.yaml", "config path, eg: -conf configs/payment.yaml")
+	flag.StringVar(&flagconf, "conf", "configs/zalo.yaml", "config path, eg: -conf configs/zalo.yaml")
 
 }
 
