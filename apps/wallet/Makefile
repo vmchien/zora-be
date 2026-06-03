@@ -136,12 +136,30 @@ wire:
 error-codes:
 	cd ../../pkg/errors/gen && go run generate.go
 
+
+.PHONY: schema
+# generate ent_schema for smp module
+schema:
+	@echo "ent schema generating......."
+	@for mod in wallet \
+				; do \
+		echo ">>>>>>> running for module: $$mod"; \
+		echo "cleaning old files...."; \
+		find "./internal/data/ent" -mindepth 1 -not -name 'init.go' -exec rm -rf {} +; \
+		find "./internal/data/ent_hook" -type f \( -name '*_gen.go' \) -delete; \
+		find "./internal/data/ent_interceptor" -type f \( -name '*_gen.go' \) -delete; \
+		find "./internal/data/gen_sql" -type f \( -name '*_gen.sql' \) -delete; \
+	done
+	@go run ../../pkg/data/generate/generate.go wallet;
+
+
 .PHONY: all
 # generate all
 all:
 	@echo "Name=${Name}"
 	make config;
 	make api;
+	make schema;
 	#make error-codes;
 	#make swagger2;
 	#make swagger3;

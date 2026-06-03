@@ -1,6 +1,6 @@
 package constant
 
-// Function constants for schema categorization
+// Function constants for ent_schema categorization
 const (
 	SEARCH       = "search"
 	BOOKING      = "booking"

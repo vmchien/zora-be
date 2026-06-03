@@ -70,7 +70,7 @@ api:
                $(API_PROTO_FILES)
 
 .PHONY: schema
-# generate schema for smp module
+# generate ent_schema for smp module
 schema:
 	@echo "ent schema generating......."
 	@for mod in zalo \

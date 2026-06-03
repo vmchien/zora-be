@@ -179,7 +179,7 @@ func tmplFuncMap() template.FuncMap {
 }
 
 func generateEntSchema(schemaDir, packageName, outputDir string) {
-	fmt.Println("generate ent schema at: " + outputDir)
+	fmt.Println("generate ent ent_schema at: " + outputDir)
 	config := &gen.Config{
 		Target:  outputDir,
 		Package: packageName,
@@ -205,7 +205,7 @@ func generateEntSchema(schemaDir, packageName, outputDir string) {
 		log.Fatalf("running ent codegen: %v", err)
 	}
 
-	// fmt.Println("ent schema generation successfully")
+	// fmt.Println("ent ent_schema generation successfully")
 }
 
 func generateTableMaps(projectRoot, schemaDir, outputDir string) {
@@ -218,7 +218,7 @@ func generateTableMaps(projectRoot, schemaDir, outputDir string) {
 
 	graph, err := entc.LoadGraph(schemaDir, &gen.Config{})
 	if err != nil {
-		log.Fatalf("failed to load graph from schema: %v", err)
+		log.Fatalf("failed to load graph from ent_schema: %v", err)
 	}
 
 	f, err := os.Create(filepath.Join(outputDir, "list_module_tables_gen.go"))
@@ -247,7 +247,7 @@ func generateTemplate(projectRoot, schemaDir, packageName, outputDir, tmplName s
 
 	graph, err := entc.LoadGraph(schemaDir, &gen.Config{})
 	if err != nil {
-		log.Fatalf("failed to load graph from schema: %v", err)
+		log.Fatalf("failed to load graph from ent_schema: %v", err)
 	}
 
 	if data == nil {
@@ -302,7 +302,7 @@ func generateTemplate(projectRoot, schemaDir, packageName, outputDir, tmplName s
 //
 // 	schemaDir := filepath.Join(projectRoot, "data", ignoreDeleteFolder)
 //
-// 	// Load graph from schema
+// 	// Load graph from ent_schema
 // 	_, err = entc.LoadGraph(schemaDir, &gen.Config{})
 // 	if err != nil {
 // 		log.Fatalf("failed to load graph from %s: %v", schemaDir, err)
@@ -363,7 +363,7 @@ func generateTsVectorScripts(projectRoot, schemaDir, outputDir string) {
 	//
 	// graph, err := entc.LoadGraph(schemaDir, &gen.Config{})
 	// if err != nil {
-	// 	log.Fatalf("failed to load graph from schema: %v", err)
+	// 	log.Fatalf("failed to load graph from ent_schema: %v", err)
 	// }
 	//
 	// ent_hook.Fetch()
@@ -418,7 +418,7 @@ func schemaGenerating(modulePath string) {
 
 	// fmt.Println("---------------------------------------")
 	// fmt.Println("full path:", schemaDir)
-	// Load graph from schema
+	// Load graph from ent_schema
 	g, err := entc.LoadGraph(schemaDir, &gen.Config{})
 	if err != nil {
 		log.Fatalf("failed to load graph from %s: %v", schemaDir, err)
@@ -483,7 +483,7 @@ func schemaGenerating(modulePath string) {
 func executeGenSqlScript() {
 	projectRoot, schemaDir := fetchInfo()
 
-	// Load graph from schema
+	// Load graph from ent_schema
 	_, err := entc.LoadGraph(schemaDir, &gen.Config{})
 	if err != nil {
 		log.Fatalf("failed to load graph from %s: %v", schemaDir, err)

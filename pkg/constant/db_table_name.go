@@ -9,7 +9,7 @@ import (
 // The format is: "{module}_{function}__{name}".
 // For example, if the module is "smp", the function is "iam", and the name is "users",
 // the resulting table name would be "smp_iam__users".
-// This helps in maintaining a clear structure in the database schema, especially when
+// This helps in maintaining a clear structure in the database ent_schema, especially when
 // dealing with multiple modules and functions that may have similar or overlapping names.
 // It is particularly useful in larger applications where different components may need
 // to interact with the database in a modular way, allowing for better organization and

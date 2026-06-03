@@ -18,8 +18,8 @@ func (conn *Connection) SchemaCreate(ctx context.Context, schemaName string, opt
 		}
 	}
 
-	// Create schema if it does not exist
-	conn.l.Infof(ctx, "Creating schema with options: %v", opts)
+	// Create ent_schema if it does not exist
+	conn.l.Infof(ctx, "Creating ent_schema with options: %v", opts)
 
 	// Migrate system function first if exists
 	if err := executeSystemFunctions(ctx, conn.Driver, schemaName); err != nil {
@@ -29,7 +29,7 @@ func (conn *Connection) SchemaCreate(ctx context.Context, schemaName string, opt
 
 	err := migrateSchema(ctx, conn.Driver, opts...)
 	if err != nil {
-		conn.l.Errorf(ctx, "Failed to create schema: %v", err)
+		conn.l.Errorf(ctx, "Failed to create ent_schema: %v", err)
 		return err
 	}
 	conn.l.Infof(ctx, "Schema created successfully with options: %v", opts)
@@ -82,7 +82,7 @@ func (conn *Connection) ExecuteSqlScripts(ctx context.Context, schemaName string
 		}
 	}
 
-	conn.l.Infof(ctx, "Creating schema with options: %v", opts)
+	conn.l.Infof(ctx, "Creating ent_schema with options: %v", opts)
 
 	// Migrate system function first if exists
 	if err := executeSystemFunctions(ctx, conn.Driver, schemaName); err != nil {
@@ -92,7 +92,7 @@ func (conn *Connection) ExecuteSqlScripts(ctx context.Context, schemaName string
 
 	err := migrateSchema(ctx, conn.Driver, opts...)
 	if err != nil {
-		conn.l.Errorf(ctx, "Failed to create schema: %v", err)
+		conn.l.Errorf(ctx, "Failed to create ent_schema: %v", err)
 		return err
 	}
 	conn.l.Infof(ctx, "Schema created successfully with options: %v", opts)

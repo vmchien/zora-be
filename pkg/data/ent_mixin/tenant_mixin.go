@@ -12,7 +12,7 @@ import (
 	"vn.vato.zora.be.api/pkg/def"
 )
 
-// MixinTenant holds the schema definition for tenant-related entities.
+// MixinTenant holds the ent_schema definition for tenant-related entities.
 type MixinTenant struct {
 	mixin.Schema
 }

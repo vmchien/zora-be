@@ -124,16 +124,16 @@ func (d *Data) WithTx(ctx context.Context, fn func(tx *ent.Tx) error) error {
 
 func (d *Data) AutoMigrate(ctx context.Context, mode, schemaName string) error {
 	opts := orm.GetMigrationOptions(mode, schemaName)
-	d.l.Infof(ctx, "AutoMigrating schema: %s", schemaName)
+	d.l.Infof(ctx, "AutoMigrating ent_schema: %s", schemaName)
 	err := d.Client.Schema.Create(ctx, opts...)
 	if err != nil {
-		d.l.Errorf(ctx, "AutoMigrate failed for schema %s: %v", schemaName, err)
+		d.l.Errorf(ctx, "AutoMigrate failed for ent_schema %s: %v", schemaName, err)
 		return err
 	}
 
 	err = orm.ExecuteSqlScripts(ctx, d.Conn.Driver, schemaName, opts)
 	if err != nil {
-		d.l.Errorf(ctx, "Executing SQL scripts failed for schema %s: %v", schemaName, err)
+		d.l.Errorf(ctx, "Executing SQL scripts failed for ent_schema %s: %v", schemaName, err)
 		return err
 	}
 

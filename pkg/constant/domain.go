@@ -2,7 +2,7 @@ package constant
 
 import "github.com/google/uuid"
 
-// Domain constants for schema categorization
+// Domain constants for ent_schema categorization
 const (
 	VATO                   = "vato"
 	TanQuangDung           = "tqd"

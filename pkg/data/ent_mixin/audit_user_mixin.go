@@ -10,7 +10,7 @@ import (
 	"vn.vato.zora.be.api/pkg/data/ent_annotation"
 )
 
-// MixinAuditUser holds the schema definition for entities that require audit user information.
+// MixinAuditUser holds the ent_schema definition for entities that require audit user information.
 type MixinAuditUser struct {
 	mixin.Schema
 }

@@ -10,7 +10,7 @@ import (
 	"vn.vato.zora.be.api/pkg/data/ent_annotation"
 )
 
-// MixinAuditTime holds the schema definition for entities that require audit timestamps.
+// MixinAuditTime holds the ent_schema definition for entities that require audit timestamps.
 type MixinAuditTime struct {
 	mixin.Schema
 }
