@@ -44,11 +44,8 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 		logger,
 		domainName,
 		moduleName,
-		schemaName,
-		mode,
 		c.Database.Source,
 		c.Database.Driver,
-		c.Database.AutoMigrate,
 		c.Database.Debugging,
 	)
 	if err != nil {

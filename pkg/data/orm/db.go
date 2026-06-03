@@ -31,9 +31,7 @@ type Connection struct {
 	name   string
 }
 
-func NewConnection(logger log.Logger,
-	domainName, moduleName, schemaName, mode, dns, driver string,
-	autoMigrate, debugging bool,
+func NewConnection(logger log.Logger, domainName, moduleName, dns, driver string, debugging bool,
 ) (*Connection, func(), error) {
 	mu.Lock()
 	defer mu.Unlock()
@@ -48,21 +46,6 @@ func NewConnection(logger log.Logger,
 		DbDriver:  driver,
 		Debugging: debugging,
 	})
-
-	// // Auto migrate
-	// if autoMigrate {
-	// 	scriptTsVector := fmt.Sprintf("%s_%s_tsvector_column_gen.sql", domainName, moduleName)
-	// 	if schemaName == "" {
-	// 		schemaName = defaultSchemaName
-	// 	}
-	// 	var dbMode string
-	// 	if mode != "" {
-	// 		dbMode = mode
-	// 	}
-	// 	if err := AutoMigrateDB(conn, conn.Driver, dbMode, schemaName, scriptTsVector); err != nil {
-	// 		conn.l.Fatal(err)
-	// 	}
-	// }
 
 	return conn, conn.cleanup, nil
 }
@@ -130,8 +113,6 @@ func (c *Connection) openConnection(conf EntConfig) {
 
 	if conf.Debugging {
 		sqlDrv := dialect.DebugWithContext(drv, func(ctx context.Context, i ...interface{}) {
-			// query := fmt.Sprint(i...)
-			// coloredTime := fmt.Sprintf("\033[34m[SQL]\033[0m %s", query)
 			coloredTime := fmt.Sprint(i...)
 			c.l.Debug(ctx, coloredTime)
 		})
