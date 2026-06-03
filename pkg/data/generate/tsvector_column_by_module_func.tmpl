@@ -1,0 +1,40 @@
+{{ define "tsvector_column_by_module_func" }}
+{{- $targetModule := .Module }}
+{{- $targetFunc := .Function }}
+
+{{- range $node := .Graph.Nodes }}
+  {{- $tsFields := list }}
+
+  {{- $matches := findRE `^([a-z0-9]+)_([a-z0-9]+)__(.+)$` $node.Table }}
+  {{- if eq (len $matches) 1 }}
+    {{- $m := index $matches 0 }}
+    {{- $mod := index $m 1 }}
+    {{- $func := index $m 2 }}
+
+    {{- if and (eq $mod $targetModule) (eq $func $targetFunc) }}
+
+      {{- range $f := $node.Fields }}
+        {{- if hasAnnotation $f.Annotations "TSVectorAnnotation" }}
+          {{- $tsFields = append $tsFields $f.Name }}
+        {{- end }}
+      {{- end }}
+
+      {{- if gt (len $tsFields) 0 }}
+ALTER TABLE {{ $node.Table }}
+ADD COLUMN IF NOT EXISTS ts_vector tsvector
+GENERATED ALWAYS AS (
+  to_tsvector('simple', immutable_unaccent(
+    {{- range $i, $f := $tsFields -}}
+      {{- if $i }} || ' ' || {{ end }}COALESCE({{ $f }}, ''::text)
+    {{- end }}
+  ))
+) STORED;
+
+CREATE INDEX IF NOT EXISTS {{ $node.Table }}_ts_vector_idx
+ON {{ $node.Table }} USING GIN (ts_vector);
+
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

@@ -74,8 +74,3 @@ data/ent/**
 /tools/Makefile
 
 .gocache
-/.claude/
-/.codegraph/
-/.cursor/
-/.mcp.json
-/AGENTS.md

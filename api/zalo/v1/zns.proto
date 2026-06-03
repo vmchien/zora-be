@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package vn.vato.zora.be.api.zalo.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "vn.vato.zora.be.api/api/zalo/v1;v1";
+
+// The greeting service definition.
+service ZnsService {
+  rpc Send(ZnsRequest)returns (ZnsReply);
+}
+
+// The request message containing the user's name.
+message ZnsRequest {
+  string name = 1;
+}
+
+// The response message containing the greetings
+message ZnsReply {
+  string message = 1;
+}
