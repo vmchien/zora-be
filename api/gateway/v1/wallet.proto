@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package vn.vato.zora.be.api.gateway.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "vn.vato.zora.be.api/api/gateway/v1;v1";
+
+// The greeting service definition.
+service Wallet {
+  // Sends a greeting
+  rpc GetBalance (BalanceRequest) returns (BalanceReply) {
+    option (google.api.http) = {
+      get: "/balance"
+    };
+  }
+}
+
+message BalanceRequest {
+  string name = 1;
+}
+
+message BalanceReply {
+  string code = 1;
+}

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	paymentv1 "vn.vato.zora.be.api/api/payment/v1"
+	walletv1 "vn.vato.zora.be.api/api/wallet/v1"
 	"vn.vato.zora.be.api/apps/gateway/internal/conf"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -12,7 +13,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewPaymentClient, NewPaymentRepo)
+var ProviderSet = wire.NewSet(NewData, NewGreeterRepo, NewPaymentClient, NewPaymentRepo, NewWalletRepo, NewWalletClient)
 
 // Data .
 type Data struct {
@@ -38,4 +39,16 @@ func NewPaymentClient(c *conf.Data, logger log.Logger) (paymentv1.BookingService
 		return nil, err
 	}
 	return paymentv1.NewBookingServiceClient(conn), nil
+}
+
+func NewWalletClient(c *conf.Data, logger log.Logger) (walletv1.WalletServiceClient, error) {
+	conn, err := grpc.DialInsecure(
+		context.Background(),
+		grpc.WithEndpoint(c.Wallet.Endpoint),
+		grpc.WithTimeout(c.Wallet.Timeout.AsDuration()),
+	)
+	if err != nil {
+		return nil, err
+	}
+	return walletv1.NewWalletServiceClient(conn), nil
 }

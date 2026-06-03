@@ -1,9 +1,7 @@
 package server
 
 import (
-	v1 "vn.vato.zora.be.api/api/gateway/v1"
-	"vn.vato.zora.be.api/apps/gateway/internal/conf"
-	"vn.vato.zora.be.api/apps/gateway/internal/service"
+	"vn.vato.zora.be.api/apps/wallet/internal/conf"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/middleware/recovery"
@@ -11,7 +9,7 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, wallet *service.WalletService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -27,7 +25,5 @@ func NewHTTPServer(c *conf.Server, greeter *service.GreeterService, wallet *serv
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterGreeterHTTPServer(srv, greeter)
-	v1.RegisterWalletHTTPServer(srv, wallet)
 	return srv
 }

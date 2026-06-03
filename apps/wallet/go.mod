@@ -1,10 +1,6 @@
-module vn.vato.zora.be.api/apps/gateway
+module vn.vato.zora.be.api/apps/wallet
 
 go 1.26
-
-replace vn.vato.zora.be.api/api/gateway => ../../api/gateway
-
-replace vn.vato.zora.be.api/api/payment => ../../api/payment
 
 replace vn.vato.zora.be.api/api/wallet => ../../api/wallet
 
@@ -12,8 +8,6 @@ require (
 	github.com/go-kratos/kratos/v2 v2.9.2
 	github.com/google/wire v0.7.0
 	google.golang.org/protobuf v1.36.11
-	vn.vato.zora.be.api/api/gateway v0.0.0-00010101000000-000000000000
-	vn.vato.zora.be.api/api/payment v0.0.0-00010101000000-000000000000
 	vn.vato.zora.be.api/api/wallet v0.0.0-00010101000000-000000000000
 )
 

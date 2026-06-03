@@ -1,7 +1,7 @@
 syntax = "proto3";
 package kratos.api;
 
-option go_package = "vn.vato.zora.be.api/apps/gateway/internal/conf;conf";
+option go_package = "vn.vato.zora.be.api/apps/wallet/internal/conf;conf";
 
 import "google/protobuf/duration.proto";
 
@@ -38,17 +38,4 @@ message Data {
   }
   Database database = 1;
   Redis redis = 2;
-
-  message Payment {
-    string endpoint = 1;
-    google.protobuf.Duration timeout = 2;
-  }
-  Payment payment = 3;
-
-  message Wallet {
-    string endpoint = 1;
-    google.protobuf.Duration timeout = 2;
-  }
-
-  Wallet wallet = 4;
 }
