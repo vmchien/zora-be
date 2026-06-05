@@ -3,26 +3,232 @@ syntax = "proto3";
 package vn.vato.zora.be.api.wallet.v1;
 
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 option go_package = "vn.vato.zora.be.api/api/wallet/v1;v1";
 option java_multiple_files = true;
-option java_outer_classname = "HelloworldProtoV1";
+option java_outer_classname = "WalletProtoV1";
 
 // The wallet service definition.
 service WalletService {
-  rpc GetBalance(BalanceRequest) returns (BalanceReply);
+  // GET /billing/wallets
+  rpc GetWallets(GetWalletsRequest) returns (GetWalletsReply) {
+    option (google.api.http) = {
+      get: "/billing/wallets"
+    };
+  }
 
-  rpc Transfer (BalanceRequest) returns (BalanceReply);
+  // POST /billing/topup/init
+  rpc InitTopup(InitTopupRequest) returns (InitTopupReply) {
+    option (google.api.http) = {
+      post: "/billing/topup/init"
+      body: "*"
+    };
+  }
+
+  // GET /billing/topup/{order_id}
+  rpc GetTopupStatus(GetTopupStatusRequest) returns (GetTopupStatusReply) {
+    option (google.api.http) = {
+      get: "/billing/topup/{order_id}"
+    };
+  }
+
+  // POST /billing/transfer-to-zns
+  rpc TransferToZNS(TransferToZNSRequest) returns (GetWalletsReply) {
+    option (google.api.http) = {
+      post: "/billing/transfer-to-zns"
+      body: "*"
+    };
+  }
+
+  // GET /billing/transactions
+  rpc GetTransactions(GetTransactionsRequest) returns (GetTransactionsReply) {
+    option (google.api.http) = {
+      get: "/billing/transactions"
+    };
+  }
+
+  // GET /billing/invoices/{id}/pdf
+  rpc GetInvoicePDF(GetInvoicePDFRequest) returns (GetInvoicePDFReply) {
+    option (google.api.http) = {
+      get: "/billing/invoices/{id}/pdf"
+    };
+  }
+
+  // POST /billing/service-fee/pay
+  rpc PayServiceFee(PayServiceFeeRequest) returns (EmptyReply) {
+    option (google.api.http) = {
+      post: "/billing/service-fee/pay"
+      body: "*"
+    };
+  }
+
+  // PATCH /billing/auto-renew
+  rpc UpdateAutoRenew(UpdateAutoRenewRequest) returns (EmptyReply) {
+    option (google.api.http) = {
+      patch: "/billing/auto-renew"
+      body: "*"
+    };
+  }
+
+  // POST /billing/oa-package/buy
+  rpc BuyOAPackage(BuyOAPackageRequest) returns (EmptyReply) {
+    option (google.api.http) = {
+      post: "/billing/oa-package/buy"
+      body: "*"
+    };
+  }
+
+  // POST /webhook/sepay (no auth – called by Sepay)
+  rpc SepayWebhook(SepayWebhookRequest) returns (EmptyReply) {
+    option (google.api.http) = {
+      post: "/webhook/sepay"
+      body: "*"
+    };
+  }
 }
 
-message BalanceRequest {
-  int64 user_id = 1;
+// ──────────────────────────────────────────────
+// Shared
+// ──────────────────────────────────────────────
+
+message EmptyReply {}
+
+message WalletBalance {
+  double balance_zatify = 1;
+  double balance_zns    = 2;
+  string currency       = 3;
 }
 
-message BalanceReply {
-  int64 balance_zatify_id = 1;
-  int64 balance_zatify = 2;
+message Pagination {
+  int32 page     = 1;
+  int32 per_page = 2;
+  int32 total    = 3;
+}
 
-  int64 balance_zns_id = 3;
-  int64 balance_zns = 4;
+// ──────────────────────────────────────────────
+// GET /billing/wallets
+// ──────────────────────────────────────────────
+
+message GetWalletsRequest {}
+
+message GetWalletsReply {
+  WalletBalance balance = 1;
+}
+
+// ──────────────────────────────────────────────
+// POST /billing/topup/init
+// ──────────────────────────────────────────────
+
+message InitTopupRequest {
+  // Số tiền nạp (VNĐ), tối thiểu 10000
+  int64 amount = 1 [(validate.rules).int64.gte = 10000];
+}
+
+message InitTopupReply {
+  string order_id    = 1;
+  string qr_url      = 2;
+  int64  amount      = 3;
+  string expired_at  = 4; // RFC3339
+}
+
+// ──────────────────────────────────────────────
+// GET /billing/topup/{order_id}
+// ──────────────────────────────────────────────
+
+message GetTopupStatusRequest {
+  string order_id = 1 [(validate.rules).string.min_len = 1];
+}
+
+message GetTopupStatusReply {
+  // pending | completed | expired
+  string status = 1;
+}
+
+// ──────────────────────────────────────────────
+// POST /billing/transfer-to-zns
+// ──────────────────────────────────────────────
+
+message TransferToZNSRequest {
+  // Số tiền chuyển (VNĐ), tối thiểu 1000
+  int64  amount         = 1 [(validate.rules).int64.gte = 1000];
+  string promotion_code = 2;
+}
+
+// ──────────────────────────────────────────────
+// GET /billing/transactions
+// ──────────────────────────────────────────────
+
+message GetTransactionsRequest {
+  // topup | transfer_zns | service_fee | oa_package | zns_cost
+  string type = 1;
+  string from = 2; // date YYYY-MM-DD
+  string to   = 3; // date YYYY-MM-DD
+  int32  page = 4;
+}
+
+message Transaction {
+  string id         = 1;
+  string type       = 2;
+  double amount     = 3;
+  string status     = 4; // success | failed | pending
+  string ref_code   = 5;
+  string created_at = 6; // RFC3339
+}
+
+message GetTransactionsReply {
+  repeated Transaction data       = 1;
+  Pagination           pagination = 2;
+}
+
+// ──────────────────────────────────────────────
+// GET /billing/invoices/{id}/pdf
+// ──────────────────────────────────────────────
+
+message GetInvoicePDFRequest {
+  string id = 1 [(validate.rules).string.min_len = 1];
+}
+
+message GetInvoicePDFReply {
+  // Raw PDF binary
+  bytes content      = 1;
+  string content_type = 2; // application/pdf
+}
+
+// ──────────────────────────────────────────────
+// POST /billing/service-fee/pay
+// ──────────────────────────────────────────────
+
+message PayServiceFeeRequest {
+  string oa_id = 1 [(validate.rules).string.min_len = 1];
+}
+
+// ──────────────────────────────────────────────
+// PATCH /billing/auto-renew
+// ──────────────────────────────────────────────
+
+message UpdateAutoRenewRequest {
+  string oa_id   = 1 [(validate.rules).string.min_len = 1];
+  bool   enabled = 2;
+}
+
+// ──────────────────────────────────────────────
+// POST /billing/oa-package/buy
+// ──────────────────────────────────────────────
+
+message BuyOAPackageRequest {
+  string oa_id   = 1 [(validate.rules).string.min_len = 1];
+  // standard | advanced | premium
+  string package = 2 [(validate.rules).string = {in: ["standard", "advanced", "premium"]}];
+}
+
+// ──────────────────────────────────────────────
+// POST /webhook/sepay
+// ──────────────────────────────────────────────
+
+message SepayWebhookRequest {
+  string order_id  = 1;
+  int64  amount    = 2;
+  string status    = 3;
+  string signature = 4;
 }

@@ -36,6 +36,11 @@ message Data {
     google.protobuf.Duration read_timeout = 3;
     google.protobuf.Duration write_timeout = 4;
   }
+  message Sepay {
+    string api_key        = 1;
+    string webhook_secret = 2;
+  }
   Database database = 1;
-  Redis redis = 2;
+  Redis    redis    = 2;
+  Sepay    sepay    = 3;
 }

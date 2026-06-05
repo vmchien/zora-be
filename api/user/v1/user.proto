@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package vn.vato.zora.be.api.user.v1;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "vn.vato.zora.be.api/api/user/v1;v1";
+
+service UserService {
+
+  // Auth
+  rpc Register(RegisterRequest)           returns (RegisterReply);
+  rpc Login(LoginRequest)                 returns (LoginReply);
+  rpc RefreshToken(RefreshTokenRequest)   returns (RefreshTokenReply);
+  rpc Logout(LogoutRequest)               returns (LogoutReply);
+
+  // Profile
+  rpc GetProfile(GetProfileRequest)       returns (GetProfileReply);
+  rpc UpdateProfile(UpdateProfileRequest) returns (UpdateProfileReply);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordReply);
+
+  // Address
+  rpc AddAddress(AddAddressRequest)       returns (AddAddressReply);
+  rpc ListAddresses(ListAddressesRequest) returns (ListAddressesReply);
+  rpc DeleteAddress(DeleteAddressRequest) returns (DeleteAddressReply);
+
+  // Internal
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenReply);
+  rpc GetUserById(GetUserByIdRequest)     returns (GetUserByIdReply);
+}
+
+// ── Auth ────────────────────────────────────────────────
+
+message RegisterRequest {
+  string email    = 1;
+  string password = 2;
+  string phone    = 3;
+  string name     = 4;
+}
+
+message RegisterReply {
+  string user_id = 1;
+  string message = 2;
+}
+
+message LoginRequest {
+  string email    = 1;
+  string password = 2;
+}
+
+message LoginReply {
+  string access_token  = 1;
+  string refresh_token = 2;
+  int64  expires_in    = 3;
+  User   user          = 4;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenReply {
+  string access_token = 1;
+  int64  expires_in   = 2;
+}
+
+message LogoutRequest {
+  string user_id      = 1;
+  string access_token = 2;
+}
+
+message LogoutReply {
+  bool success = 1;
+}
+
+// ── Profile ─────────────────────────────────────────────
+
+message GetProfileRequest {
+  string user_id = 1;
+}
+
+message GetProfileReply {
+  User user = 1;
+}
+
+message UpdateProfileRequest {
+  string user_id = 1;
+  string name    = 2;
+  string phone   = 3;
+  string avatar  = 4;
+}
+
+message UpdateProfileReply {
+  User user = 1;
+}
+
+message ChangePasswordRequest {
+  string user_id      = 1;
+  string old_password = 2;
+  string new_password = 3;
+}
+
+message ChangePasswordReply {
+  bool   success = 1;
+  string message = 2;
+}
+
+// ── Address ─────────────────────────────────────────────
+
+message AddAddressRequest {
+  string user_id    = 1;
+  string label      = 2;
+  string street     = 3;
+  string district   = 4;
+  string city       = 5;
+  bool   is_default = 6;
+}
+
+message AddAddressReply {
+  Address address = 1;
+}
+
+message ListAddressesRequest {
+  string user_id = 1;
+}
+
+message ListAddressesReply {
+  repeated Address addresses = 1;
+}
+
+message DeleteAddressRequest {
+  string user_id    = 1;
+  string address_id = 2;
+}
+
+message DeleteAddressReply {
+  bool success = 1;
+}
+
+// ── Internal ────────────────────────────────────────────
+
+message ValidateTokenRequest {
+  string access_token = 1;
+}
+
+message ValidateTokenReply {
+  bool   valid   = 1;
+  string user_id = 2;
+  string role    = 3;
+}
+
+message GetUserByIdRequest {
+  string user_id = 1;
+}
+
+message GetUserByIdReply {
+  User user = 1;
+}
+
+// ── Shared ──────────────────────────────────────────────
+
+message User {
+  string                    user_id    = 1;
+  string                    email      = 2;
+  string                    name       = 3;
+  string                    phone      = 4;
+  string                    avatar     = 5;
+  string                    role       = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message Address {
+  string address_id = 1;
+  string user_id    = 2;
+  string label      = 3;
+  string street     = 4;
+  string district   = 5;
+  string city       = 6;
+  bool   is_default = 7;
+}

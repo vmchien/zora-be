@@ -11,7 +11,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/tracing"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"vn.vato.zora.be.api/apps/wallet/internal/conf"
+	"vn.vato.zora.be.api/apps/user/internal/conf"
 )
 
 // go build -ldflags "-X main.Version=x.y.z"
