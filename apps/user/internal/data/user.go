@@ -9,11 +9,28 @@ import (
 	"google.golang.org/grpc/status"
 	"vn.vato.zora.be.api/apps/user/internal/biz"
 	"vn.vato.zora.be.api/apps/user/internal/data/ent"
+	"vn.vato.zora.be.api/apps/user/internal/data/ent/accountlogin"
 )
 
 type UserRepo struct {
 	data *Data
 	log  *log.Helper
+}
+
+func (r UserRepo) FindAccountByEmail(ctx context.Context, email string) (*biz.Account, error) {
+	result, err := r.data.Client.AccountLogin.
+		Query().
+		Where(accountlogin.Account(email)).
+		WithUserAccount().
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			return nil, status.Errorf(codes.NotFound, "account not found")
+		}
+		return nil, status.Errorf(codes.Internal, "failed to find account: %v", err)
+	}
+
+	return toAccountBiz(result), nil
 }
 
 func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
@@ -58,9 +75,15 @@ func (r UserRepo) Create(ctx context.Context, u *biz.Account) error {
 	return nil
 }
 
-func (r UserRepo) FindByEmail(ctx context.Context, email string) (*biz.Account, error) {
-	// TODO implement me
-	panic("implement me")
+func (r UserRepo) ExistsAccountByEmail(ctx context.Context, email string) (bool, error) {
+	exists, err := r.data.Client.AccountLogin.
+		Query().
+		Where(accountlogin.Account(email)).
+		Exist(ctx)
+	if err != nil {
+		return false, status.Errorf(codes.Internal, "failed to check email: %v", err)
+	}
+	return exists, nil
 }
 
 func (r UserRepo) FindByID(ctx context.Context, id string) (*biz.UserInfo, error) {
@@ -91,4 +114,15 @@ func (r UserRepo) ListAddresses(ctx context.Context, userID string) ([]*biz.Addr
 func (r UserRepo) DeleteAddress(ctx context.Context, userID, addressID string) error {
 	// TODO implement me
 	panic("implement me")
+}
+
+func toAccountBiz(l *ent.AccountLogin) *biz.Account {
+	a := &biz.Account{
+		ID:        l.ID,
+		Email:     l.Account,
+		Salt:      l.PasswordSalt,
+		Password:  l.PasswordHash,
+		CreatedAt: l.CreatedAt,
+	}
+	return a
 }

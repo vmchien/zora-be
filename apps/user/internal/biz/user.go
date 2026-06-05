@@ -2,6 +2,8 @@ package biz
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"time"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -56,7 +58,8 @@ type Address struct {
 // Repository interface — data layer implement
 type UserRepo interface {
 	Create(ctx context.Context, u *Account) error
-	FindByEmail(ctx context.Context, email string) (*Account, error)
+	ExistsAccountByEmail(ctx context.Context, email string) (bool, error)
+	FindAccountByEmail(ctx context.Context, email string) (*Account, error)
 	FindByID(ctx context.Context, id string) (*UserInfo, error)
 	Update(ctx context.Context, u *UserInfo) error
 	UpdatePassword(ctx context.Context, userID, hashedPassword string) error
@@ -75,19 +78,21 @@ func NewUserUseCase(repo UserRepo) *UserUseCase {
 }
 
 func (uc *UserUseCase) Register(ctx context.Context, email, password, phone, name string) (*UserInfo, error) {
-	existing, _ := uc.userRepo.FindByEmail(ctx, email)
-	if existing != nil {
-		return nil, status.Error(codes.InvalidArgument, "Email not found")
+	existing, _ := uc.userRepo.ExistsAccountByEmail(ctx, email)
+	if existing {
+		return nil, status.Error(codes.InvalidArgument, "Email đã tồn tại")
 	}
 
-	hashed, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	salt := randomString(8)
+	passwordHashed, err := hashPassword(password, salt)
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, "Lỗi khi mã hóa mật khẩu")
 	}
 
 	u := &Account{
 		Email:     email,
-		Password:  string(hashed),
+		Password:  passwordHashed,
+		Salt:      salt,
 		Phone:     phone,
 		Name:      name,
 		Role:      "CUSTOMER",
@@ -95,7 +100,8 @@ func (uc *UserUseCase) Register(ctx context.Context, email, password, phone, nam
 	}
 
 	if err := uc.userRepo.Create(ctx, u); err != nil {
-		return nil, err
+		log.Error(err)
+		return nil, status.Error(codes.Internal, "Lỗi khi tạo tài khoản")
 	}
 
 	log.Infof("user registered: %s", u.ID)
@@ -103,7 +109,7 @@ func (uc *UserUseCase) Register(ctx context.Context, email, password, phone, nam
 }
 
 func (uc *UserUseCase) ConfirmOTPRegister(ctx context.Context, email, password, phone, name string) (*UserInfo, error) {
-	existing, _ := uc.userRepo.FindByEmail(ctx, email)
+	existing, _ := uc.userRepo.FindAccountByEmail(ctx, email)
 	if existing != nil {
 		return nil, status.Error(codes.InvalidArgument, "Email not found")
 	}
@@ -131,14 +137,15 @@ func (uc *UserUseCase) ConfirmOTPRegister(ctx context.Context, email, password, 
 }
 
 func (uc *UserUseCase) Login(ctx context.Context, email, password string) (*UserInfo, error) {
-	user, err := uc.userRepo.FindByEmail(ctx, email)
+	account, err := uc.userRepo.FindAccountByEmail(ctx, email)
 	if err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "Email not found")
+		return nil, status.Error(codes.FailedPrecondition, "Tài khoản không hợp lệ!")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-		return nil, status.Error(codes.FailedPrecondition, "Email or Password is incorrect")
+	if err := comparePassword(password, account.Password, account.Salt); err != nil {
+		return nil, status.Error(codes.FailedPrecondition, "Sai mật khẩu")
 	}
+
 	return &UserInfo{}, nil
 }
 
@@ -185,4 +192,26 @@ func (uc *UserUseCase) ChangePassword(ctx context.Context, userID, oldPass, newP
 	}
 
 	return uc.userRepo.UpdatePassword(ctx, userID, string(hashed))
+}
+
+func randomString(n int) string {
+	b := make([]byte, n)
+	if _, err := rand.Read(b); err != nil {
+		return ""
+	}
+	return base64.URLEncoding.EncodeToString(b)[:n]
+}
+
+func hashPassword(password string, salt string) (string, error) {
+	passwordSalt := salt + password
+	hashed, err := bcrypt.GenerateFromPassword([]byte(passwordSalt), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashed), nil
+}
+
+func comparePassword(password string, passwordHash string, salt string) error {
+	passwordSalt := salt + password
+	return bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(passwordSalt))
 }

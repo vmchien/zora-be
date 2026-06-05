@@ -16,7 +16,7 @@ type TokenRepo struct {
 
 func (t TokenRepo) SaveRefreshToken(ctx context.Context, userID uuid.UUID, token string, ttl time.Duration) error {
 	// TODO implement me
-	panic("implement me")
+	return nil
 }
 
 func (t TokenRepo) GetRefreshToken(ctx context.Context, token string) (uuid.UUID, error) {
